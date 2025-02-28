@@ -9,18 +9,23 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-console.log('Welcome to the chat room\nType a message:');
+console.log('Welcome to the chat room\n');
 
 rl.question("Enter your name: ", (name) => {
     console.log(`Welcome, ${name}! Type your message below:`);
 
     rl.on('line', (message) => {
-        socket.emit('chat message', { sender: name, text: message }); // Now includes sender
+        socket.emit('chat message', { sender: name, text: message });
     });
 });
 
+socket.on('chat history',(messages)=>{
+    console.log(JSON.stringify(messages, null, 2));
+
+})
+
 socket.on('chat message', (msg) => {
-    console.log(`New message: ${msg}`);
+    console.log(`New message: from ${msg.sender} and message is ${msg.text}`);
 });
 
 socket.on('disconnect', () => {
